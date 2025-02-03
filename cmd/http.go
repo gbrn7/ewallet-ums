@@ -3,6 +3,7 @@ package cmd
 import (
 	"ewallet-ums/helpers"
 	"ewallet-ums/internal/api"
+	"ewallet-ums/internal/interfaces"
 	"ewallet-ums/internal/repository"
 	"ewallet-ums/internal/services"
 
@@ -10,37 +11,71 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func bootstrapEngin() {
+func ServeHttp() {
+	dependencyInject := dependencyInject()
 
+	r := gin.Default()
+
+	r.GET("/health", dependencyInject.HealthcheckAPI.HealthcheckHandlerHTTP)
+
+	userV1 := r.Group("/user/v1")
+	userV1.POST("/register", dependencyInject.RegisterApi.Register)
+	userV1.POST("/login", dependencyInject.LoginApi.Login)
+	userV1.DELETE("/logout", dependencyInject.MiddlewareValidateAuth, dependencyInject.LogoutApi.Logout)
+
+	err := r.Run(":" + helpers.GetEnv("PORT", "8080"))
+	if err != nil {
+		logrus.Fatal("err")
+	}
 }
 
-func ServeHttp() {
+type Dependency struct {
+	UserRepository interfaces.IUserRepository
+	HealthcheckAPI interfaces.IHealthcheckHandler
+	RegisterApi    interfaces.IRegisterHandler
+	LoginApi       interfaces.ILoginHandler
+	LogoutApi      interfaces.ILogoutHandler
+}
+
+func dependencyInject() Dependency {
 	healthcheckSvc := &services.Healthcheck{}
-	HealthcheckAPI := api.Healthcheck{
+	healthcheckAPI := &api.Healthcheck{
 		HealthcheckServices: healthcheckSvc,
 	}
 
-	registerRepo := &repository.RegisterRepository{
+	userRepo := &repository.UserRepository{
 		DB: helpers.DB,
 	}
 
 	registerSvc := &services.RegisterService{
-		RegisterRepo: registerRepo,
+		UserRepo: userRepo,
 	}
 
 	registerAPI := &api.RegisterHandler{
 		RegisterService: registerSvc,
 	}
 
-	r := gin.Default()
+	loginSvc := &services.LoginService{
+		UserRepo: userRepo,
+	}
 
-	r.GET("/health", HealthcheckAPI.HealthcheckHandlerHTTP)
+	loginAPI := &api.LoginHandler{
+		LoginService: loginSvc,
+	}
 
-	userV1 := r.Group("/user/v1")
-	userV1.POST("/register", registerAPI.Register)
+	logoutSvc := &services.LogoutService{
+		UserRepo: userRepo,
+	}
 
-	err := r.Run(":" + helpers.GetEnv("PORT", "8080"))
-	if err != nil {
-		logrus.Fatal("err")
+	logoutAPI := &api.LogoutHandler{
+		LogoutService: logoutSvc,
+	}
+
+	return Dependency{
+		UserRepository: userRepo,
+		HealthcheckAPI: healthcheckAPI,
+		RegisterApi:    registerAPI,
+		LoginApi:       loginAPI,
+		LogoutApi:      logoutAPI,
 	}
 }
