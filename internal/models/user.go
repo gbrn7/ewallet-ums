@@ -7,7 +7,7 @@ import (
 )
 
 type User struct {
-	ID          uint64    `json:"id"`
+	ID          int       `json:"id"`
 	Username    string    `json:"username" gorm:"colum:username;type:varchar(20);unique;not null" validate:"required"`
 	Email       string    `json:"email" gorm:"colum:email;type:varchar(100);unique;not null" validate:"required"`
 	PhoneNumber string    `json:"phone_number" gorm:"colum:phone_number;type:varchar(15);unique;not null" validate:"required"`
@@ -31,7 +31,7 @@ type UserSession struct {
 	ID                  uint `gorm:"primarykey"`
 	CreatedAt           time.Time
 	UpdatedAt           time.Time
-	UserID              uint64    `json:"user_id" gorm:"type:int" validate:"required"`
+	UserID              int       `json:"user_id" gorm:"type:int" validate:"required"`
 	Token               string    `json:"token" gorm:"type:varchar(255)" validate:"required"`
 	RefreshToken        string    `json:"refresh_token" gorm:"type:varchar(255)" validate:"required"`
 	TokenExpired        time.Time `json:"token_expired" validate:"required"`
