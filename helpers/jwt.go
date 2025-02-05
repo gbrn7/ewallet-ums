@@ -9,7 +9,7 @@ import (
 )
 
 type ClaimToken struct {
-	UserID   int    `json:"user_id"`
+	UserID   uint64 `json:"user_id"`
 	Username string `json:"username"`
 	Fullname string `json:"full_name"`
 	Email    string `json:"email"`
@@ -23,7 +23,7 @@ var MapTypeToken = map[string]time.Duration{
 
 var jwtSecret = []byte(GetEnv("APP_SECRET", ""))
 
-func GenerateToken(ctx context.Context, userID int, username string, fullname string, email string, now time.Time, tokenType string) (string, error) {
+func GenerateToken(ctx context.Context, userID uint64, username string, fullname string, email string, now time.Time, tokenType string) (string, error) {
 
 	claimToken := ClaimToken{
 		UserID:   userID,
