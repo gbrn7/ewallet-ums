@@ -9,7 +9,8 @@ import (
 )
 
 type RegisterService struct {
-	UserRepo interfaces.IUserRepository
+	UserRepo       interfaces.IUserRepository
+	ExternalWallet interfaces.IWallet
 }
 
 func (s *RegisterService) Register(ctx context.Context, request models.User) (interface{}, error) {
@@ -21,6 +22,11 @@ func (s *RegisterService) Register(ctx context.Context, request models.User) (in
 	request.Password = string(hashedPassword)
 
 	err = s.UserRepo.InsertNewUser(ctx, &request)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.ExternalWallet.CreateWallet(ctx, request.ID)
 	if err != nil {
 		return nil, err
 	}
