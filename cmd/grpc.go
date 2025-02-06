@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	tokenvalidation "ewallet-ums/cmd/proto/tokenvalidation"
+	"ewallet-ums/cmd/proto/tokenvalidation"
 	"ewallet-ums/helpers"
 	"log"
 	"net"

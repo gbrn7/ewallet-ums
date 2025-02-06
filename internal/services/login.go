@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,8 +26,6 @@ func (s *LoginService) Login(ctx context.Context, req models.LoginRequest) (mode
 		return response, errors.Wrap(err, "failed to get user by username")
 	}
 
-	logrus.Info(userDetail.Password)
-
 	if err := bcrypt.CompareHashAndPassword([]byte(userDetail.Password), []byte(req.Password)); err != nil {
 		return response, errors.Wrap(err, "failed to compare password")
 	}
@@ -40,18 +37,17 @@ func (s *LoginService) Login(ctx context.Context, req models.LoginRequest) (mode
 
 	refreshToken, err := helpers.GenerateToken(ctx, userDetail.ID, userDetail.Username, userDetail.Fullname, userDetail.Email, now, "refresh_token")
 	if err != nil {
-		return response, errors.Wrap(err, "failed to generate token")
+		return response, errors.Wrap(err, "failed to generate refresh token")
 	}
 
-	userSession := models.UserSession{
+	userSession := &models.UserSession{
 		UserID:              userDetail.ID,
 		Token:               token,
 		RefreshToken:        refreshToken,
 		TokenExpired:        now.Add(helpers.MapTypeToken["token"]),
 		RefreshTokenExpired: now.Add(helpers.MapTypeToken["refresh_token"]),
 	}
-
-	err = s.UserRepo.InsertNewUserSession(ctx, &userSession)
+	err = s.UserRepo.InsertNewUserSession(ctx, userSession)
 	if err != nil {
 		return response, errors.Wrap(err, "failed to insert new session")
 	}

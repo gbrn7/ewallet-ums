@@ -4,7 +4,7 @@
 // - protoc             v5.29.3
 // source: token_validation.proto
 
-package __
+package tokenvalidation
 
 import (
 	context "context"

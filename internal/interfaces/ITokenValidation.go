@@ -2,13 +2,12 @@ package interfaces
 
 import (
 	"context"
-	tokenValidation "ewallet-ums/cmd/proto/tokenvalidation"
+	"ewallet-ums/cmd/proto/tokenvalidation"
 	"ewallet-ums/helpers"
 )
 
 type ITokenValidationHandler interface {
-	TokenValidationHandler(ctx context.Context, req *tokenValidation.TokenRequest) (*tokenValidation.TokenResponse, error)
-	tokenValidation.UnimplementedTokenValidationServer
+	ValidateToken(ctx context.Context, req *tokenvalidation.TokenRequest) (*tokenvalidation.TokenResponse, error)
 }
 
 type ITokenValidationService interface {

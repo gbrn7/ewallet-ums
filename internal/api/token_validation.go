@@ -2,7 +2,7 @@ package api
 
 import (
 	"context"
-	tokenvalidation "ewallet-ums/cmd/proto/tokenvalidation"
+	"ewallet-ums/cmd/proto/tokenvalidation"
 	"ewallet-ums/constants"
 	"ewallet-ums/helpers"
 	"ewallet-ums/internal/interfaces"
@@ -14,7 +14,7 @@ type TokenValidationHandler struct {
 	tokenvalidation.UnimplementedTokenValidationServer
 }
 
-func (s *TokenValidationHandler) TokenValidationHandler(ctx context.Context, req *tokenvalidation.TokenRequest) (*tokenvalidation.TokenResponse, error) {
+func (s *TokenValidationHandler) ValidateToken(ctx context.Context, req *tokenvalidation.TokenRequest) (*tokenvalidation.TokenResponse, error) {
 	var (
 		token = req.Token
 		log   = helpers.Logger
@@ -41,6 +41,7 @@ func (s *TokenValidationHandler) TokenValidationHandler(ctx context.Context, req
 			UserId:   claimToken.UserID,
 			Username: claimToken.Username,
 			FullName: claimToken.Fullname,
+			Email:    claimToken.Email,
 		},
-	}, err
+	}, nil
 }
