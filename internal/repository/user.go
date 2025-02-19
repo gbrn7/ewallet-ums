@@ -13,7 +13,7 @@ type UserRepository struct {
 }
 
 func (r *UserRepository) InsertNewUser(ctx context.Context, user *models.User) error {
-	return r.DB.Create(user).Error
+	return r.DB.Debug().Create(user).Error
 }
 
 func (r *UserRepository) GetUserByUsername(ctx context.Context, username string) (models.User, error) {
@@ -39,11 +39,11 @@ func (r *UserRepository) InsertNewUserSession(ctx context.Context, session *mode
 }
 
 func (r *UserRepository) DeleteUserSession(ctx context.Context, token string) error {
-	return r.DB.Exec("DELETE FROM user_sessions WHERE token = ?", token).Error
+	return r.DB.Exec("DELETE FROM `user_sessions` WHERE token = ?", token).Error
 }
 
 func (r *UserRepository) UpdateTokenByRefreshToken(ctx context.Context, token string, refreshToken string) error {
-	return r.DB.Exec("UPDATE user_sessions SET token = ? WHERE refresh_token = ?", token, refreshToken).Error
+	return r.DB.Exec("UPDATE `user_sessions` SET token = ? WHERE refresh_token = ?", token, refreshToken).Error
 }
 
 func (r *UserRepository) GetUserSessionByToken(ctx context.Context, token string) (models.UserSession, error) {
