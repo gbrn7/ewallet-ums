@@ -13,7 +13,7 @@ type UserRepository struct {
 }
 
 func (r *UserRepository) InsertNewUser(ctx context.Context, user *models.User) error {
-	return r.DB.Debug().Create(user).Error
+	return r.DB.Create(user).Error
 }
 
 func (r *UserRepository) GetUserByUsername(ctx context.Context, username string) (models.User, error) {

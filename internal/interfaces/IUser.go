@@ -5,6 +5,7 @@ import (
 	"ewallet-ums/internal/models"
 )
 
+//go:generate mockgen -source=IUser.go -destination=../services/user_mock_test.go -package=services
 type IUserRepository interface {
 	InsertNewUser(ctx context.Context, user *models.User) error
 	GetUserByUsername(ctx context.Context, username string) (models.User, error)
