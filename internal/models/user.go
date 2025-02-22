@@ -15,8 +15,8 @@ type User struct {
 	Address     string    `json:"address" gorm:"column:address;type:text"`
 	Dob         string    `json:"dob" gorm:"column:dob;type:date"`
 	Password    string    `json:"password,omitempty" gorm:"column:password;type:varchar(255)" validate:"required"`
-	CreatedAt   time.Time `json:"-"  gorm:"column:created_at;type:timestamp"`
-	UpdatedAt   time.Time `json:"-"  gorm:"column:updated_at;type:timestamp"`
+	CreatedAt   time.Time `json:"created_at"  gorm:"column:created_at;type:timestamp"`
+	UpdatedAt   time.Time `json:"updated_at"  gorm:"column:updated_at;type:timestamp"`
 }
 
 func (*User) TableName() string {

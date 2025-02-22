@@ -6,6 +6,7 @@ import (
 	"ewallet-ums/helpers"
 )
 
+//go:generate mockgen -source=ITokenValidation.go -destination=../api/token_mock_test.go -package=api
 type ITokenValidationHandler interface {
 	ValidateToken(ctx context.Context, req *tokenvalidation.TokenRequest) (*tokenvalidation.TokenResponse, error)
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"ewallet-ums/cmd/middleware"
 	"ewallet-ums/external"
 	"ewallet-ums/helpers"
 	"ewallet-ums/internal/api"
@@ -22,8 +23,8 @@ func ServeHttp() {
 	userV1 := r.Group("/user/v1")
 	userV1.POST("/register", dependencyInject.RegisterApi.Register)
 	userV1.POST("/login", dependencyInject.LoginApi.Login)
-	userV1.DELETE("/logout", dependencyInject.MiddlewareValidateAuth, dependencyInject.LogoutApi.Logout)
-	userV1.PUT("/refresh-token", dependencyInject.MiddlewareRefreshToken, dependencyInject.RefreshTokenAPI.RefreshToken)
+	userV1.DELETE("/logout", middleware.MiddlewareValidateAuth, dependencyInject.LogoutApi.Logout)
+	userV1.PUT("/refresh-token", middleware.MiddlewareValidateAuth, dependencyInject.RefreshTokenAPI.RefreshToken)
 
 	err := r.Run(":" + helpers.GetEnv("PORT", "8080"))
 	if err != nil {

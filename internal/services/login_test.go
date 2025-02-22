@@ -23,6 +23,8 @@ func TestLoginService_Login(t *testing.T) {
 		return
 	}
 
+	now := time.Now()
+
 	type args struct {
 		ctx context.Context
 		req models.LoginRequest
@@ -54,8 +56,8 @@ func TestLoginService_Login(t *testing.T) {
 					Address:     "address",
 					Dob:         "dob",
 					Password:    string(password),
-					CreatedAt:   time.Now(),
-					UpdatedAt:   time.Now(),
+					CreatedAt:   now,
+					UpdatedAt:   now,
 				}, nil)
 				userMockRepo.EXPECT().InsertNewUserSession(args.ctx, gomock.Any()).Return(nil)
 			},
@@ -94,8 +96,8 @@ func TestLoginService_Login(t *testing.T) {
 					Address:     "address",
 					Dob:         "dob",
 					Password:    string(password),
-					CreatedAt:   time.Now(),
-					UpdatedAt:   time.Now(),
+					CreatedAt:   now,
+					UpdatedAt:   now,
 				}, nil)
 				userMockRepo.EXPECT().InsertNewUserSession(args.ctx, gomock.Any()).Return(assert.AnError)
 			},

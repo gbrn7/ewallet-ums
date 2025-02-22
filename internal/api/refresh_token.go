@@ -4,6 +4,7 @@ import (
 	"ewallet-ums/constants"
 	"ewallet-ums/helpers"
 	"ewallet-ums/internal/interfaces"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,7 @@ func (api *RefreshTokenHandler) RefreshToken(c *gin.Context) {
 
 	claim, ok := c.Get("token")
 	if !ok {
+
 		log.Error("failed on get autorization in context", nil)
 		helpers.SendResponseHTTP(c, http.StatusInternalServerError, constants.ErrServerError, nil)
 		return
@@ -35,7 +37,7 @@ func (api *RefreshTokenHandler) RefreshToken(c *gin.Context) {
 
 	resp, err := api.RefreshTokenService.RefreshToken(c.Request.Context(), refreshToken, *tokenClaim)
 	if err != nil {
-		log.Error("failed on refresh token service", err)
+		fmt.Println("failed on refresh token service", err)
 		helpers.SendResponseHTTP(c, http.StatusInternalServerError, constants.ErrServerError, nil)
 		return
 	}

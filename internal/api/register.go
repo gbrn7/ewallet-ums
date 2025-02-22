@@ -5,6 +5,7 @@ import (
 	"ewallet-ums/helpers"
 	"ewallet-ums/internal/interfaces"
 	"ewallet-ums/internal/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,8 +35,8 @@ func (api *RegisterHandler) Register(c *gin.Context) {
 
 	resp, err := api.RegisterService.Register(c.Request.Context(), req)
 	if err != nil {
-		log.Error("failed to register new user: ", err)
-		helpers.SendResponseHTTP(c, http.StatusInternalServerError, constants.ErrServerError, nil)
+		fmt.Print(fmt.Errorf("failed to register user: %v", err))
+		helpers.SendResponseHTTP(c, http.StatusInternalServerError, constants.ErrServerError, models.User{})
 		return
 	}
 
