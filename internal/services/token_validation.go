@@ -21,14 +21,17 @@ func (s *TokenValidationService) TokenValidation(ctx context.Context, token stri
 
 	claimToken, err = helpers.ValidateToken(ctx, token)
 	if err != nil {
-
+		helpers.Logger.Warn("Validate Token Failed")
 		return claimToken, errors.Wrap(err, "failed to validate token")
 	}
 
 	_, err = s.UserRepo.GetUserSessionByToken(ctx, token)
 	if err != nil {
+		helpers.Logger.Warn("failed to get user session")
 		return claimToken, errors.Wrap(err, "failed to get user session")
 	}
+
+	helpers.Logger.Info("Validate Token Succes")
 
 	return claimToken, nil
 }
