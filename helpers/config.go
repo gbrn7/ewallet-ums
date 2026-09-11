@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -12,11 +12,16 @@ func SetupConfig() {
 	var err error
 	Env, err = godotenv.Read(".env")
 	if err != nil {
-		log.Fatal("failed to read env file: ", err)
+		Env = map[string]string{}
 	}
 }
 
 func GetEnv(key string, val string) string {
+	valFromOs := os.Getenv(key)
+	if valFromOs != "" {
+		return valFromOs
+	}
+
 	result := Env[key]
 	if result == "" {
 		result = val
